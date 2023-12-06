@@ -6,38 +6,9 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import lab0.Variant;
-import lab0.Variant.DAY_OF_WEEK;
+import lab0.Variant.GRADE;
 
 public class VariantTest {
-
-    public static double EPS = 0.0000001;
-
-    @Test
-    public void MassTest(){
-        assertEquals(new int[]{1, 2, 3}, new int[]{1, 2, 3});
-    }
-
-    @Test(enabled = false)
-    public void loginOld() {
-
-        assertEquals(new Variant().booleanTask(3), false);
-
-    }
-
-    @Test(dataProvider = "inputProvider")
-    public void inputTest(int p1, long p3) {
-        assertEquals(new Variant().inputOutputTask(p1), p3);
-    }
-
-    @DataProvider
-    public Object[][] inputProvider() {
-        return new Object[][] { { 2, 4l }, { 6, 36L } };
-    }
-
-    @Test(expectedExceptions = AssertionError.class)
-    public void negativeInputTest() {
-        new Variant().inputOutputTask(-2);
-    }
 
     ////////////////////////////////////////////////
 
@@ -48,24 +19,19 @@ public class VariantTest {
 
     @DataProvider
     public Object[][] integerProvider() {
-        return new Object[][] { { 100, 1 }, { 12, 0 }, { 139, 1 } };
-    }
-
-    @Test(expectedExceptions = AssertionError.class)
-    public void negativeIntegerTest() {
-        new Variant().integerNumbersTask(-2);
+        return new Object[][] { { 3600, 0 }, { 5400, 1800 } };
     }
 
     ////////////////////////////////////////////////
 
     @Test(dataProvider = "ifProvider")
-    public void ifTest(int p1, int p3) {
-        assertEquals(new Variant().ifTask(p1), p3);
+    public void ifTest(int p1, int p2, int p3) {
+        assertEquals(new Variant().ifTask(p1, p2), p3);
     }
 
     @DataProvider
     public Object[][] ifProvider() {
-        return new Object[][] { { 2, 3 }, { 0, 0 }, { -3, -3 } };
+        return new Object[][] { { 2, 3, 1 }, { -2, 3, 2 }, { 3, -5, 4 }, { -7, -3, 3 }};
     }
 
     //////////////////////////////////////////////////
@@ -77,72 +43,85 @@ public class VariantTest {
 
     @DataProvider
     public Object[][] booleanProvider() {
-        return new Object[][] { { 5, true }, { 0, false }, { -3, false } };
+        return new Object[][] { { 123, true }, { 312, false }, { 566, false }, { 567, true } };
     }
 
     //////////////////////////////////////////////////
 
     @Test(dataProvider = "switchProvider")
-    public void switchTest(int p1, DAY_OF_WEEK p2) {
+    public void switchTest(int p1, GRADE p2) {
         assertEquals(new Variant().switchTask(p1), p2);
     }
 
     @DataProvider
     public Object[][] switchProvider() {
-        return new Object[][] { { 3, DAY_OF_WEEK.WEDNESDAY }, { 6, 6 } };
+        return new Object[][] { { 5, GRADE.EXCELLENT }, { 3, GRADE.SATISFYING }, { 2, GRADE.UNSATISFYING} };
     }
+
+/*
 
     @Test(expectedExceptions = AssertionError.class)
     public void switchNegativeTest() {
         new Variant().forTask(10);
     }
 
+ */
+
     ///////////////////////////////////////////////////
 
     @Test(dataProvider = "forProvider")
-    public void forTest(int n, double p2) {
-        assertEquals(new Variant().forTask(n), p2, EPS);
+    public void forTest(double p1, int p2, double p3) {
+        assertEquals(new Variant().forTask(p1, p2), p3);
     }
 
     @DataProvider
     public Object[][] forProvider() {
-        return new Object[][] { { 3, 2.666667 }, { 7, 2.718254 }, { 12, 2.718282 } };
+        return new Object[][] {
+                { 2.0, 5, 7.0 },
+        };
     }
 
     ///////////////////////////////////////////////////
 
-    //////////////////////////////////////////
-
     @Test(dataProvider = "whileProvider")
-    public void whileTest(int a, int b, int c) {
-        assertEquals(new Variant().whileTask(a, b), c);
+    public void whileTest(int p1, boolean p2) {
+        assertEquals(new Variant().whileTask(p1), p2);
     }
 
     @DataProvider
     public Object[][] whileProvider() {
-        return new Object[][] { { 10, 2, 0 }, { 12, 10, 2 }, { 12, 1, 0 }, { 25, 7, 4 } };
-    }
-
-    @Test(expectedExceptions = AssertionError.class, dataProvider = "negativeWhileProvider")
-    public void negativeWhileTest(int a, int b) {
-        new Variant().whileTask(a, b);
-    }
-
-    @DataProvider
-    public Object[][] negativeWhileProvider() {
-        return new Object[][] { { 1, 2 }, { -2, 1 }, { 2, -1 } };
+        return new Object[][] { { 2, true }, { 4, false }, { 3, true }, { 93, false} };
     }
 
     //////////////////////////////////////////
+
+    @Test(dataProvider = "minmaxProvider")
+    public void minmaxTest(int p1, int[] p2, int[] p3){
+        assertEquals(new Variant().minmaxTask(p1, p2), p3);
+    }
+
+    @DataProvider
+    public Object[][] minmaxProvider(){
+        return new Object[][] {
+                { 5, new int[] { 5, 2, 8, 1, 6 }, new int[] { 1, 2 } },
+                { 4, new int[] { 10, 7, 8, 5 }, new int[] { 5, 7 } },
+                { 3, new int[] { 1, 2, 3 }, new int[] { 1, 2 } }
+        };
+    }
+
+    //////////////////////////////////////////
+
+
     @Test(dataProvider = "arrayProvider")
-    public void arrayTest(double[] array, double value) {
-        assertEquals(new Variant().arrayTask(array), value);
+    public void arrayTest(double[] p1, int p2, int p3, double p4) {
+        assertEquals(new Variant().arrayTask(p1, p2, p3), p4);
     }
 
     @DataProvider
     public Object[][] arrayProvider() {
-        return new Object[][] { { new double[] { 10, 2, 3 }, 0 }, { new double[] { 10, 2, 13 }, 10 },
-                { new double[] { 4, 3, 5, -4, 9, 2 }, -4 } };
+        return new Object[][] {
+                { new double[] { 10, 2, 13 }, 5, 9, 25.0 },
+        };
     }
 
 
@@ -150,34 +129,30 @@ public class VariantTest {
     //////////////////////////////////////////
 
     @Test(dataProvider = "matrixProvider")
-    public void twoDimensionArrayTest(int[][] input, int from, int to, int[][] output) {
-        assertEquals(new Variant().twoDimensionArrayTask(input, from, to), output);
+    public void matrixTest(int[][] p1, int p2, int p3, int p4) {
+        assertEquals(new Variant().matrixTask(p1, p2, p3), p4);
     }
 
     @DataProvider
     public Object[][] matrixProvider() {
-        int[][] input = {{2, 3, 6, 9, -9},
-                {34, 98, -9, 2, 1},
-                {-4, 2, 1, 6, 1},
-                {-98, 8, 1, 5, 3}};
+        int[][] input1 = {  {1, 2, 3},
+                            {4, 5, 6},
+                            {7, 8, 9}   };
 
-        int[][] input23 = {{2, 3, 6, 9, -9},
-                {-4, 2, 1, 6, 1},
-                {34, 98, -9, 2, 1},
-                {-98, 8, 1, 5, 3}};
+        int[][] input2 = {  {2, 4, 6},
+                            {1, 3, 5},
+                            {0, 2, 4}   };
 
-        int[][] input14 = {{-98, 8, 1, 5, 3},
-                {-4, 2, 1, 6, 1},
-                {34, 98, -9, 2, 1},
-                {2, 3, 6, 9, -9}};
+        int[][] input3 = {  {1, 0, 3, 0},
+                            {4, 0, 6, 0},
+                            {7, 0, 9, 0}    };
 
-        return new Object[][] { {input, 2, 3, input23}, { input, 1,4, input14 } };
+        return new Object[][] {
+                { input1, 3, 3, 15 },
+                { input2, 3, 3, 9 },
+                { input3, 3, 4, 0 }
+        };
 
-    }
-
-    @Test
-    public void arrayTest2(){
-        assertEquals(new int[]{2, 3}, new int[]{2, 3});
     }
 
 }
